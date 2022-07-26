@@ -1,6 +1,8 @@
 /*******************************************************************************
    Copyright (c) 2015 Thomas Telkamp and Matthijs Kooijman
    Copyright (c) 2018 Terry Moore, MCCI
+   
+   Edited by Freddy Jeufack Fotsop, 2022
 
    Permission is hereby granted, free of charge, to anyone
    obtaining a copy of this document and accompanying files,
