@@ -1,0 +1,156 @@
+[
+    {
+        "id": "c7eeddb0327cf983",
+        "type": "tab",
+        "label": "TTN_MA_to_InfluxDB",
+        "disabled": false,
+        "info": "Für meine Masterarbeit. \n_F.Jeufack_"
+    },
+    {
+        "id": "c335f40727d7bee6",
+        "type": "mqtt in",
+        "z": "c7eeddb0327cf983",
+        "name": "Connect to TTN Enddevice",
+        "topic": "v3/app-ma-jf@ttn/devices/dev-ma-jeuf-final/up",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "b3c2c24c43eea7b4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "x": 310,
+        "y": 140,
+        "wires": [
+            [
+                "1c3e16994303b1ed"
+            ]
+        ]
+    },
+    {
+        "id": "0fd8841a12b12aac",
+        "type": "debug",
+        "z": "c7eeddb0327cf983",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "1c3e16994303b1ed",
+        "type": "json",
+        "z": "c7eeddb0327cf983",
+        "name": "JSON Payload",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 560,
+        "y": 140,
+        "wires": [
+            [
+                "0fd8841a12b12aac",
+                "5d64458b1cf5c863"
+            ]
+        ]
+    },
+    {
+        "id": "5d64458b1cf5c863",
+        "type": "function",
+        "z": "c7eeddb0327cf983",
+        "name": "Extract TTN Data",
+        "func": "msg.payload = {\n    gateway_id: msg.payload.uplink_message.rx_metadata[0].gateway_ids.gateway_id,\n    application_id: msg.payload.end_device_ids.application_ids.application_id,\n    device_id: msg.payload.end_device_ids.device_id,\n    timestamp: msg.payload.uplink_message.rx_metadata[0].timestamp,\n    //timestamp: msg.payload.uplink_message.settings.time,\n    airtime: parseFloat((msg.payload.uplink_message.consumed_airtime).slice(0,-1)),\n    temperature: msg.payload.uplink_message.decoded_payload.temperature,\n    humidity: msg.payload.uplink_message.decoded_payload.humidity,\n    rssi: msg.payload.uplink_message.rx_metadata[0].rssi\n}\nreturn msg;",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 280,
+        "wires": [
+            [
+                "aec5cdcb412a2250",
+                "a1631646e17b046c"
+            ]
+        ]
+    },
+    {
+        "id": "aec5cdcb412a2250",
+        "type": "debug",
+        "z": "c7eeddb0327cf983",
+        "name": "",
+        "active": false,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 810,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "a1631646e17b046c",
+        "type": "influxdb out",
+        "z": "c7eeddb0327cf983",
+        "influxdb": "373fa459.54e07c",
+        "name": "Air Quality DB",
+        "measurement": "dht22_v2",
+        "precision": "s",
+        "retentionPolicy": "",
+        "database": "",
+        "retentionPolicyV18Flux": "",
+        "org": "",
+        "bucket": "",
+        "x": 820,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "b3c2c24c43eea7b4",
+        "type": "mqtt-broker",
+        "name": "TTN",
+        "broker": "eu1.cloud.thethings.network",
+        "port": "1883",
+        "clientid": "",
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "373fa459.54e07c",
+        "type": "influxdb",
+        "hostname": "127.0.0.1",
+        "port": "8086",
+        "protocol": "http",
+        "database": "AQ_DB",
+        "name": "PI-MA",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "1.x",
+        "url": "",
+        "rejectUnauthorized": false
+    }
+]

@@ -1,0 +1,18 @@
+function decodeUplink(input) { 
+var msg = ""; 
+    var data = {}; 
+    var warnings = []; 
+    var errors = []; 
+    
+    for (var i = 0; i < input.bytes.length; i++) { 
+        msg += (String.fromCharCode(input.bytes[i]));    
+    } 
+    
+    data.message = msg; 
+
+    return { 
+        data: data, 
+        warnings: warnings, 
+        errors: errors 
+    }; 
+}  
